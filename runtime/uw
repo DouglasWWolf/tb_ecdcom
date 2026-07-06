@@ -1,0 +1,16 @@
+source api
+limit=1
+start_type=1
+
+while [ ! -z $1 ]; do
+    if [ "$1" == "-next" ]; then
+        start_type=2
+        shift
+    fi
+
+    limit=$1
+    shift
+done
+
+axi REG_UW_LIMIT $limit
+axi REG_UW_START $start_type

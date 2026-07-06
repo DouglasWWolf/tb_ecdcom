@@ -1,0 +1,9 @@
+source api
+
+axi REG_START 1
+
+while [ $(get REG_READY) -eq 0 ]; do
+    sleep 1
+done
+
+echo "Ready"

@@ -1,0 +1,65 @@
+# Fetch our register definitions
+source bash_registers fpga_reg.h
+
+# A fancy interface to pcireg that understands register names
+axi()
+{
+    local addr=$(($1))
+
+    if [[ ! "$1" =~ ^[0] ]] && [ $addr -eq 0 ]; then
+        echo ">>>> UNKNOWN FPGA REGISTER $1 <<<<"
+        return 1
+    fi
+
+    axireg $addr $2 $3 $4    
+}
+
+write64()
+{
+    local addr=$(($1))
+    local value=$(($2))
+
+    hi=$((value >> 32))
+    lo=$((value & 0xFFFFFFFF))
+
+    if [[ ! "$1" =~ ^[0] ]] && [ $addr -eq 0 ]; then
+        echo ">>>> UNKNOWN FPGA REGISTER $1 <<<<"
+        return 1
+    fi
+
+    axireg $addr         $hi
+    axireg $((addr + 4)) $lo
+}
+
+
+# A fancy interface to pcireg that understands register names
+get()
+{
+    local addr=$(($1))
+
+    if [[ ! "$1" =~ ^[0] ]] && [ $addr -eq 0 ]; then
+        echo ">>>> UNKNOWN FPGA REGISTER $1 <<<<"
+        return 1
+    fi
+
+    axireg -dec $addr $2 $3 $4    
+}
+
+# A fancy interface that understands register names
+get64()
+{
+    local addr=$(($1))
+
+    if [[ ! "$1" =~ ^[0] ]] && [ $addr -eq 0 ]; then
+        echo ">>>> UNKNOWN FPGA REGISTER $1 <<<<"
+        return 1
+    fi
+
+    addrl=$((addr + 4))
+
+    hi=$(axireg -dec $addr )
+    lo=$(axireg -dec $addrl)
+    echo $(( (hi << 32) | lo ))
+
+}
+

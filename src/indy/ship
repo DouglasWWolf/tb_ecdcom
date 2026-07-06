@@ -1,0 +1,2 @@
+cp *.v ~/fpga/indy_ecdcom/project/src/sim_ecd
+

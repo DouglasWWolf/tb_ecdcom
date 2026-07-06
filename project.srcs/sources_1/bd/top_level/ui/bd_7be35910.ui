@@ -1,0 +1,43 @@
+{
+   "ActiveEmotionalView":"No Loops",
+   "Default View_ScaleFactor":"1.0",
+   "Default View_TopLeft":"-342,-198",
+   "DisplayTieOff":"1",
+   "ExpandedHierarchyInLayout":"",
+   "No Loops_ExpandedHierarchyInLayout":"",
+   "No Loops_Layout":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0 TLS
+#  -string -flagsOSRD
+preplace port port-id_clk -pg 1 -lvl 0 -x 0 -y 60 -defaultsOSRD
+preplace port port-id_reset_stb -pg 1 -lvl 0 -x 0 -y 140 -defaultsOSRD
+preplace port port-id_reset_done -pg 1 -lvl 3 -x 670 -y 240 -defaultsOSRD
+preplace portBus resetn_out -pg 1 -lvl 3 -x 670 -y 60 -defaultsOSRD
+preplace inst ecdcom_reset_ctl -pg 1 -lvl 1 -x 150 -y 100 -defaultsOSRD -pinDir clk left -pinY clk 20L -pinDir reset_stb left -pinY reset_stb 40L -pinDir reset_out right -pinY reset_out 20R -pinDir reset_done right -pinY reset_done 140R
+preplace inst reset_manager -pg 1 -lvl 2 -x 470 -y 40 -swap {0 1 2 3 4 6 7 8 5 9} -defaultsOSRD -pinDir slowest_sync_clk left -pinY slowest_sync_clk 20L -pinDir ext_reset_in left -pinY ext_reset_in 80L -pinDir aux_reset_in left -pinY aux_reset_in 100L -pinDir mb_debug_sys_rst left -pinY mb_debug_sys_rst 120L -pinDir dcm_locked left -pinY dcm_locked 140L -pinDir mb_reset right -pinY mb_reset 40R -pinBusDir bus_struct_reset right -pinBusY bus_struct_reset 60R -pinBusDir peripheral_reset right -pinBusY peripheral_reset 80R -pinBusDir interconnect_aresetn right -pinBusY interconnect_aresetn 20R -pinBusDir peripheral_aresetn right -pinBusY peripheral_aresetn 100R
+preplace netloc ecdcom_reset_ctl_0_reset_out 1 1 1 N 120
+preplace netloc source_100mhz_sys_clk 1 0 2 20 60 NJ
+preplace netloc reset_stb_1 1 0 1 NJ 140
+preplace netloc ecdcom_reset_ctl_0_reset_done 1 1 2 NJ 240 NJ
+preplace netloc source_100mhz_sys_resetn 1 2 1 NJ 60
+levelinfo -pg 1 0 150 470 670
+pagesize -pg 1 -db -bbox -sgen -120 0 830 300
+",
+   "No Loops_ScaleFactor":"1.0",
+   "No Loops_TopLeft":"-332,-169",
+   "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0 TLS
+#  -string -flagsOSRD
+preplace port port-id_clk -pg 1 -lvl 0 -x 0 -y 50 -defaultsOSRD
+preplace port port-id_reset_stb -pg 1 -lvl 0 -x 0 -y 190 -defaultsOSRD
+preplace port port-id_reset_done -pg 1 -lvl 3 -x 620 -y 190 -defaultsOSRD
+preplace portBus interconnect_aresetn -pg 1 -lvl 3 -x 620 -y 110 -defaultsOSRD
+preplace inst ecdcom_reset_ctl -pg 1 -lvl 1 -x 140 -y 180 -defaultsOSRD
+preplace inst reset_manager -pg 1 -lvl 2 -x 430 -y 90 -defaultsOSRD
+preplace netloc ecdcom_reset_ctl_0_reset_out 1 1 1 260 70n
+preplace netloc source_100mhz_sys_clk 1 0 2 20 50 NJ
+preplace netloc reset_stb_1 1 0 1 NJ 190
+preplace netloc ecdcom_reset_ctl_0_reset_done 1 1 2 NJ 190 NJ
+preplace netloc source_100mhz_sys_resetn 1 2 1 NJ 110
+levelinfo -pg 1 0 140 430 620
+pagesize -pg 1 -db -bbox -sgen -120 0 850 240
+"
+}
+

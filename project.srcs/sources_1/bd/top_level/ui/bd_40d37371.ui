@@ -1,0 +1,57 @@
+{
+   "ActiveEmotionalView":"No Loops",
+   "Default View_ScaleFactor":"1.0",
+   "Default View_TopLeft":"-313,-158",
+   "DisplayTieOff":"1",
+   "ExpandedHierarchyInLayout":"",
+   "No Loops_ExpandedHierarchyInLayout":"",
+   "No Loops_Layout":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0 TLS
+#  -string -flagsOSRD
+preplace port axis_out0 -pg 1 -lvl 4 -x 980 -y 20 -defaultsOSRD
+preplace port axis_out1 -pg 1 -lvl 4 -x 980 -y 40 -defaultsOSRD
+preplace port tx0 -pg 1 -lvl 0 -x 0 -y 100 -defaultsOSRD
+preplace port tx1 -pg 1 -lvl 0 -x 0 -y 320 -defaultsOSRD
+preplace port port-id_clk -pg 1 -lvl 0 -x 0 -y 120 -defaultsOSRD
+preplace port port-id_resetn -pg 1 -lvl 0 -x 0 -y 140 -defaultsOSRD
+preplace inst sim_client -pg 1 -lvl 2 -x 550 -y 80 -swap {0 1 2 3 4 5 6 7 10 11 8 9} -defaultsOSRD -pinDir axis_out0 right -pinY axis_out0 20R -pinDir axis_out1 right -pinY axis_out1 40R -pinDir clk left -pinY clk 120L -pinDir resetn left -pinY resetn 140L -pinBusDir packet_req_cnt left -pinBusY packet_req_cnt 40L -pinDir packet_req_stb left -pinY packet_req_stb 60L
+preplace inst cmd_handler -pg 1 -lvl 1 -x 200 -y 80 -swap {0 1 2 3 4 5 6 8 7} -defaultsOSRD -pinDir axis_in left -pinY axis_in 20L -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L -pinDir packet_req_stb right -pinY packet_req_stb 60R -pinBusDir packet_req_cnt right -pinBusY packet_req_cnt 40R
+preplace inst data_consumer -pg 1 -lvl 3 -x 850 -y 240 -defaultsOSRD -pinDir AXIS_RX left -pinY AXIS_RX 20L -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L
+preplace inst uwdata_ila -pg 1 -lvl 3 -x 850 -y 380 -defaultsOSRD -pinDir SLOT_0_AXIS left -pinY SLOT_0_AXIS 20L -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L
+preplace inst client_ila -pg 1 -lvl 3 -x 850 -y 80 -swap {0 1 2 3 4 5 6 7 9 8} -defaultsOSRD -pinDir SLOT_0_AXIS left -pinY SLOT_0_AXIS 20L -pinDir SLOT_1_AXIS left -pinY SLOT_1_AXIS 40L -pinDir clk left -pinY clk 80L -pinDir resetn left -pinY resetn 60L
+preplace netloc cmd_handler_0_packet_req_cnt 1 1 1 N 120
+preplace netloc cmd_handler_0_packet_req_stb 1 1 1 N 140
+preplace netloc source_100mhz_sys_clk 1 0 3 40 200 390 280 720
+preplace netloc source_100mhz_sys_resetn 1 0 3 20 220 370 300 NJ
+preplace netloc ecdcom_mgr_packet_req 1 0 1 NJ 100
+preplace netloc sim_client_axis_out0 1 2 2 720 20 NJ
+preplace netloc sim_client_axis_out1 1 2 2 740 40 NJ
+preplace netloc tx1_1 1 0 3 NJ 320 NJ 320 740
+levelinfo -pg 1 0 200 550 850 980
+pagesize -pg 1 -db -bbox -sgen -100 0 1100 500
+",
+   "No Loops_ScaleFactor":"1.0",
+   "No Loops_TopLeft":"-188,-69",
+   "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0 TLS
+#  -string -flagsOSRD
+preplace port axis_out0 -pg 1 -lvl 3 -x 730 -y 80 -defaultsOSRD
+preplace port axis_out1 -pg 1 -lvl 3 -x 730 -y 100 -defaultsOSRD
+preplace port tx0 -pg 1 -lvl 0 -x 0 -y 110 -defaultsOSRD
+preplace port tx1 -pg 1 -lvl 0 -x 0 -y 220 -defaultsOSRD
+preplace port port-id_clk -pg 1 -lvl 0 -x 0 -y 130 -defaultsOSRD
+preplace port port-id_resetn -pg 1 -lvl 0 -x 0 -y 150 -defaultsOSRD
+preplace inst sim_client -pg 1 -lvl 2 -x 540 -y 90 -defaultsOSRD
+preplace inst cmd_handler_0 -pg 1 -lvl 1 -x 190 -y 130 -defaultsOSRD
+preplace inst data_consumer_0 -pg 1 -lvl 2 -x 540 -y 240 -defaultsOSRD
+preplace netloc cmd_handler_0_packet_req_cnt 1 1 1 370 100n
+preplace netloc cmd_handler_0_packet_req_stb 1 1 1 N 120
+preplace netloc source_100mhz_sys_clk 1 0 2 30 230 360
+preplace netloc source_100mhz_sys_resetn 1 0 2 20 240 350
+preplace netloc ecdcom_mgr_packet_req 1 0 1 NJ 110
+preplace netloc sim_client_axis_out0 1 2 1 NJ 80
+preplace netloc sim_client_axis_out1 1 2 1 NJ 100
+preplace netloc tx1_1 1 0 2 NJ 220 NJ
+levelinfo -pg 1 0 190 540 730
+pagesize -pg 1 -db -bbox -sgen -100 0 850 320
+"
+}
+0
