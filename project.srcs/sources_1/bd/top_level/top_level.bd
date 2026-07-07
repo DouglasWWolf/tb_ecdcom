@@ -31,17 +31,14 @@
         "ecdcom_mgr": "",
         "ecdcom_router_0": "",
         "ecdcom_router_1": "",
-        "reset_man": {
-          "ecdcom_reset_ctl": "",
-          "reset_manager": ""
-        },
         "ecdcom_uw_buffer": "",
         "ecdcom_rdmx_sequencer_0": "",
         "ecdcom_rdmx_sequencer_1": "",
         "bad_packet_filter0": "",
         "bad_packet_filter1": "",
         "ecdcom_link_state": "",
-        "one": ""
+        "one": "",
+        "ecdcom_reset_ctl": ""
       },
       "client_side": {
         "sim_client": "",
@@ -2856,112 +2853,6 @@
               }
             }
           },
-          "reset_man": {
-            "ports": {
-              "clk": {
-                "type": "clk",
-                "direction": "I"
-              },
-              "reset_stb": {
-                "direction": "I"
-              },
-              "reset_done": {
-                "type": "rst",
-                "direction": "O"
-              },
-              "resetn_out": {
-                "type": "rst",
-                "direction": "O",
-                "left": "0",
-                "right": "0"
-              }
-            },
-            "components": {
-              "ecdcom_reset_ctl": {
-                "vlnv": "xilinx.com:module_ref:ecdcom_reset_ctl:1.0",
-                "ip_revision": "1",
-                "xci_name": "top_level_ecdcom_reset_ctl_0_0",
-                "xci_path": "ip/top_level_ecdcom_reset_ctl_0_0/top_level_ecdcom_reset_ctl_0_0.xci",
-                "inst_hier_path": "ecdcom/reset_man/ecdcom_reset_ctl",
-                "reference_info": {
-                  "ref_type": "hdl",
-                  "ref_name": "ecdcom_reset_ctl",
-                  "boundary_crc": "0x0"
-                },
-                "ports": {
-                  "clk": {
-                    "type": "clk",
-                    "direction": "I",
-                    "parameters": {
-                      "FREQ_HZ": {
-                        "value": "60000000",
-                        "value_src": "ip_prop"
-                      },
-                      "PHASE": {
-                        "value": "0.0",
-                        "value_src": "ip_prop"
-                      },
-                      "CLK_DOMAIN": {
-                        "value": "/source_100mhz/system_clock_clk_out1",
-                        "value_src": "ip_prop"
-                      }
-                    }
-                  },
-                  "reset_stb": {
-                    "type": "rst",
-                    "direction": "I"
-                  },
-                  "resetn_out": {
-                    "direction": "O"
-                  },
-                  "reset_done": {
-                    "type": "rst",
-                    "direction": "O"
-                  }
-                }
-              },
-              "reset_manager": {
-                "vlnv": "xilinx.com:ip:proc_sys_reset:5.0",
-                "ip_revision": "16",
-                "xci_name": "top_level_proc_sys_reset_0_1",
-                "xci_path": "ip/top_level_proc_sys_reset_0_1/top_level_proc_sys_reset_0_1.xci",
-                "inst_hier_path": "ecdcom/reset_man/reset_manager"
-              }
-            },
-            "nets": {
-              "ecdcom_reset_ctl_0_reset_done": {
-                "ports": [
-                  "ecdcom_reset_ctl/reset_done",
-                  "reset_done"
-                ]
-              },
-              "ecdcom_reset_ctl_0_reset_out": {
-                "ports": [
-                  "ecdcom_reset_ctl/resetn_out",
-                  "reset_manager/ext_reset_in"
-                ]
-              },
-              "reset_stb_1": {
-                "ports": [
-                  "reset_stb",
-                  "ecdcom_reset_ctl/reset_stb"
-                ]
-              },
-              "source_100mhz_sys_clk": {
-                "ports": [
-                  "clk",
-                  "reset_manager/slowest_sync_clk",
-                  "ecdcom_reset_ctl/clk"
-                ]
-              },
-              "source_100mhz_sys_resetn": {
-                "ports": [
-                  "reset_manager/interconnect_aresetn",
-                  "resetn_out"
-                ]
-              }
-            }
-          },
           "ecdcom_uw_buffer": {
             "vlnv": "xilinx.com:module_ref:ecdcom_uw_buffer:1.0",
             "ip_revision": "1",
@@ -3996,6 +3887,35 @@
           },
           "one": {
             "vlnv": "xilinx.com:inline_hdl:ilconstant:1.0"
+          },
+          "ecdcom_reset_ctl": {
+            "vlnv": "xilinx.com:module_ref:ecdcom_reset_ctl:1.0",
+            "ip_revision": "1",
+            "xci_name": "top_level_ecdcom_reset_ctl_0_0",
+            "xci_path": "ip/top_level_ecdcom_reset_ctl_0_0/top_level_ecdcom_reset_ctl_0_0.xci",
+            "inst_hier_path": "ecdcom/ecdcom_reset_ctl",
+            "reference_info": {
+              "ref_type": "hdl",
+              "ref_name": "ecdcom_reset_ctl",
+              "boundary_crc": "0x0"
+            },
+            "ports": {
+              "clk": {
+                "type": "clk",
+                "direction": "I"
+              },
+              "reset_stb": {
+                "type": "rst",
+                "direction": "I"
+              },
+              "resetn_out": {
+                "direction": "O"
+              },
+              "reset_done": {
+                "type": "rst",
+                "direction": "O"
+              }
+            }
           }
         },
         "interface_nets": {
@@ -4136,7 +4056,7 @@
           },
           "ecdcom_reset_ctl_0_reset_done": {
             "ports": [
-              "reset_man/reset_done",
+              "ecdcom_reset_ctl/reset_done",
               "reset_done"
             ]
           },
@@ -4156,7 +4076,7 @@
           "reset_stb_1": {
             "ports": [
               "reset_stb",
-              "reset_man/reset_stb"
+              "ecdcom_reset_ctl/reset_stb"
             ]
           },
           "source_100mhz_sys_clk": {
@@ -4164,19 +4084,19 @@
               "clk",
               "ecdcom_router_0/clk",
               "ecdcom_router_1/clk",
-              "reset_man/clk",
               "ecdcom_rdmx_sequencer_0/clk",
               "ecdcom_rdmx_sequencer_1/clk",
               "bad_packet_filter0/clk",
               "bad_packet_filter1/clk",
               "ecdcom_link_state/clk",
               "ecdcom_mgr/clk",
-              "ecdcom_uw_buffer/clk"
+              "ecdcom_uw_buffer/clk",
+              "ecdcom_reset_ctl/clk"
             ]
           },
           "source_100mhz_sys_resetn": {
             "ports": [
-              "reset_man/resetn_out",
+              "ecdcom_reset_ctl/resetn_out",
               "ecdcom_router_0/resetn",
               "ecdcom_router_1/resetn",
               "ecdcom_rdmx_sequencer_0/resetn",

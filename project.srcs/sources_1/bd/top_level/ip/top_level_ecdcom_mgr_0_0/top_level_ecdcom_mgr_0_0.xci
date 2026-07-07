@@ -2,7 +2,7 @@
   "schema": "xilinx.com:schema:json_instance:1.0",
   "ip_inst": {
     "xci_name": "top_level_ecdcom_mgr_0_0",
-    "cell_name": "ecdcom_mgr",
+    "cell_name": "ecdcom/ecdcom_mgr",
     "component_reference": "xilinx.com:module_ref:ecdcom_mgr:1.0",
     "ip_revision": "1",
     "gen_directory": "../../../../../../project.gen/sources_1/bd/top_level/ip/top_level_ecdcom_mgr_0_0",
