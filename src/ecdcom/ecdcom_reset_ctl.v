@@ -35,9 +35,16 @@ end
 // resetn_out is asserted during *most* of the countdown.  This gives
 // the system a chance to come out of reset before "reset_done" is
 // asserted
-assign resetn_out = (counter < 32);
+wire internal_resetn_out = (counter < 32);
 
 // Reset is complete when we're no longer counting down
 assign reset_done = (counter == 0 && reset_stb == 0);
+
+// Route the "resetn_out" signal through a buffer for high-fanout routing
+BUFG i_bufg
+(
+   .I(internal_resetn_out),
+   .O(resetn_out)
+ );
 
 endmodule
