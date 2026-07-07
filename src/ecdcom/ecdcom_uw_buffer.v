@@ -94,8 +94,8 @@ always @(posedge clk) begin
         fifo_overflow   <= 0;
     end
 
-    // If this is the RDMX header, determine whether or not we
-    // want to keep the packet
+    // If this is the first data-cycle of the packet, determine whether
+    // or not want to keep the packet
     else if (sop) begin
         if (fifo_has_room) begin
             fifo_in_tvalid <= 1;

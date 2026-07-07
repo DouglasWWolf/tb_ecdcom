@@ -77,9 +77,9 @@ localparam FRAME_DATA_REQ_SIZE = FD_PAYLOAD_SIZE * 4;
 wire lvds_resetn;
 
 // We're going to map the two input streams to an array
-wire[511:0] fd_in_tdata [1:0];
-wire        fd_in_tlast [1:0];
-wire        fd_in_tvalid[1:0];
+wire[511:0] fd_in_tdata [0:1];
+wire        fd_in_tlast [0:1];
+wire        fd_in_tvalid[0:1];
 
 // Map the input stream from QSFP_0 into the array
 assign fd_in_tdata [0] = fd_in0_tdata;
