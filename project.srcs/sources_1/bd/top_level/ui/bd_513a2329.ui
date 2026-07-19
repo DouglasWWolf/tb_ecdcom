@@ -19,13 +19,13 @@ preplace port port-id_lvds_clk -pg 1 -lvl 0 -x -20 -y 320 -defaultsOSRD
 preplace port port-id_lvds_underflow -pg 1 -lvl 0 -x -20 -y 800 -defaultsOSRD
 preplace port port-id_reset_stb -pg 1 -lvl 4 -x 1280 -y 720 -defaultsOSRD
 preplace port port-id_reset_done -pg 1 -lvl 0 -x -20 -y 660 -defaultsOSRD
+preplace port port-id_uw_overflow -pg 1 -lvl 0 -x -20 -y 840 -defaultsOSRD
 preplace portBus fd0_rcvd -pg 1 -lvl 0 -x -20 -y 680 -defaultsOSRD
 preplace portBus fd1_rcvd -pg 1 -lvl 0 -x -20 -y 700 -defaultsOSRD
-preplace portBus uw_dropped -pg 1 -lvl 0 -x -20 -y 720 -defaultsOSRD
 preplace portBus qsfp1_malformed -pg 1 -lvl 0 -x -20 -y 760 -defaultsOSRD
 preplace portBus qsfp0_malformed -pg 1 -lvl 0 -x -20 -y 740 -defaultsOSRD
 preplace portBus eth_link_state -pg 1 -lvl 0 -x -20 -y 820 -defaultsOSRD
-preplace inst ecdcom_ctl -pg 1 -lvl 1 -x 230 -y 580 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 34 35 24 25 26 27 28 29 30 31 32 23 33 22} -defaultsOSRD -pinDir S_AXI left -pinY S_AXI 20L -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L -pinDir start_stb right -pinY start_stb 120R -pinDir reset_stb right -pinY reset_stb 140R -pinDir reset_done left -pinY reset_done 80L -pinBusDir fd0_rcvd left -pinBusY fd0_rcvd 100L -pinBusDir fd1_rcvd left -pinBusY fd1_rcvd 120L -pinDir uw_overflow left -pinY uw_overflow 140L -pinBusDir qsfp0_malformed left -pinBusY qsfp0_malformed 160L -pinBusDir qsfp1_malformed left -pinBusY qsfp1_malformed 180L -pinDir fd_fifo_full left -pinY fd_fifo_full 200L -pinDir lvds_underflow left -pinY lvds_underflow 220L -pinBusDir eth_link_state left -pinBusY eth_link_state 240L -pinBusDir uw_limit right -pinBusY uw_limit 40R -pinBusDir uw_ipg right -pinBusY uw_ipg 60R -pinBusDir uw_start_stb right -pinBusY uw_start_stb 20R
+preplace inst ecdcom_ctl -pg 1 -lvl 1 -x 230 -y 580 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 35 36 24 34 26 27 28 29 30 31 32 33 23 25 22} -defaultsOSRD -pinDir S_AXI left -pinY S_AXI 20L -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L -pinDir start_stb right -pinY start_stb 120R -pinDir reset_stb right -pinY reset_stb 140R -pinDir reset_done left -pinY reset_done 80L -pinDir soft_resetn_out right -pinY soft_resetn_out 80R -pinBusDir fd0_rcvd left -pinBusY fd0_rcvd 100L -pinBusDir fd1_rcvd left -pinBusY fd1_rcvd 120L -pinDir uw_overflow left -pinY uw_overflow 140L -pinBusDir qsfp0_malformed left -pinBusY qsfp0_malformed 160L -pinBusDir qsfp1_malformed left -pinBusY qsfp1_malformed 180L -pinDir fd_fifo_full left -pinY fd_fifo_full 200L -pinDir lvds_underflow left -pinY lvds_underflow 220L -pinBusDir eth_link_state left -pinBusY eth_link_state 240L -pinBusDir uw_limit right -pinBusY uw_limit 40R -pinBusDir uw_ipg right -pinBusY uw_ipg 60R -pinBusDir uw_start_stb right -pinBusY uw_start_stb 20R
 preplace inst lvds_ctl -pg 1 -lvl 2 -x 610 -y 320 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 27 26 28} -defaultsOSRD -pinDir lvds_in right -pinY lvds_in 20R -pinDir S_AXI right -pinY S_AXI 40R -pinDir clk left -pinY clk 20L -pinDir resetn left -pinY resetn 40L -pinBusDir fd_host_size right -pinBusY fd_host_size 80R -pinDir lvds_error right -pinY lvds_error 60R -pinDir reset_selftest_stb right -pinY reset_selftest_stb 100R
 preplace inst resetn_cdc -pg 1 -lvl 1 -x 230 -y 360 -defaultsOSRD -pinDir dest_clk left -pinY dest_clk 20L -pinDir dest_arst right -pinY dest_arst 20R -pinDir src_arst left -pinY src_arst 100L
 preplace inst lvds_ila -pg 1 -lvl 2 -x 610 -y 40 -swap {0 1 2 3 4 8 7 6 5} -defaultsOSRD -pinDir SLOT_0_AXIS right -pinY SLOT_0_AXIS 20R -pinDir clk left -pinY clk 40L -pinBusDir probe0 right -pinBusY probe0 60R -pinBusDir probe1 right -pinBusY probe1 40R -pinDir resetn left -pinY resetn 20L
@@ -51,7 +51,7 @@ preplace netloc qsfp1_malformed_1 1 0 1 NJ 760
 preplace netloc reset_done_1 1 0 1 NJ 660
 preplace netloc source_100mhz_sys_clk 1 0 2 50 520 NJ
 preplace netloc source_100mhz_sys_resetn 1 0 2 30 540 NJ
-preplace netloc uw_dropped_1 1 0 1 NJ 720
+preplace netloc uw_overflow_1 1 0 1 0 720n
 preplace netloc xpm_cdc_gen_0_dest_arst 1 1 2 460 260 860J
 preplace netloc LVDS_S_AXI_1 1 2 2 820J 290 1190J
 preplace netloc lvds_in_1 1 2 2 900 100 NJ
@@ -60,8 +60,8 @@ preplace netloc uw_xmit_0_axis_uw 1 2 2 900J 530 1190
 levelinfo -pg 1 -20 230 610 1060 1280
 pagesize -pg 1 -db -bbox -sgen -240 0 1420 880
 ",
-   "No Loops_ScaleFactor":"0.728833",
-   "No Loops_TopLeft":"-428,4",
+   "No Loops_ScaleFactor":"0.731121",
+   "No Loops_TopLeft":"-391,4",
    "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0 TLS
 #  -string -flagsOSRD
 preplace port S_AXI -pg 1 -lvl 0 -x 0 -y 50 -defaultsOSRD

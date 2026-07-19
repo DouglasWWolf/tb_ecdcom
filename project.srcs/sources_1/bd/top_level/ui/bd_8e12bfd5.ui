@@ -7,69 +7,71 @@
    "No Loops_ExpandedHierarchyInLayout":"",
    "No Loops_Layout":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0 TLS
 #  -string -flagsOSRD
-preplace port axis_in0 -pg 1 -lvl 0 -x -60 -y 60 -defaultsOSRD
-preplace port axis_in1 -pg 1 -lvl 0 -x -60 -y 200 -defaultsOSRD
-preplace port packet_req -pg 1 -lvl 5 -x 1620 -y 90 -defaultsOSRD
-preplace port lvds_out -pg 1 -lvl 5 -x 1620 -y 190 -defaultsOSRD
-preplace port uwdata_in -pg 1 -lvl 0 -x -60 -y 450 -defaultsOSRD
-preplace port uwdata_out -pg 1 -lvl 5 -x 1620 -y 450 -defaultsOSRD
-preplace port port-id_clk -pg 1 -lvl 0 -x -60 -y 360 -defaultsOSRD
-preplace port port-id_start_stb -pg 1 -lvl 5 -x 1620 -y 210 -defaultsOSRD -right
-preplace port port-id_fd_fifo_full -pg 1 -lvl 5 -x 1620 -y 290 -defaultsOSRD
-preplace port port-id_lvds_clk -pg 1 -lvl 5 -x 1620 -y 310 -defaultsOSRD -right
-preplace port port-id_lvds_underflow -pg 1 -lvl 5 -x 1620 -y 230 -defaultsOSRD
-preplace port port-id_reset_stb -pg 1 -lvl 0 -x -60 -y 340 -defaultsOSRD
-preplace port port-id_reset_done -pg 1 -lvl 0 -x -60 -y 380 -defaultsOSRD -left
-preplace port port-id_uw_overflow -pg 1 -lvl 5 -x 1620 -y 390 -defaultsOSRD
-preplace portBus fd0_packet_count -pg 1 -lvl 5 -x 1620 -y 250 -defaultsOSRD
-preplace portBus fd1_packet_count -pg 1 -lvl 5 -x 1620 -y 270 -defaultsOSRD
-preplace portBus qsfp1_bad_packets -pg 1 -lvl 0 -x -60 -y 220 -defaultsOSRD -left
-preplace portBus qsfp0_bad_packets -pg 1 -lvl 0 -x -60 -y 80 -defaultsOSRD -left
-preplace portBus eth_link_state -pg 1 -lvl 0 -x -60 -y 530 -defaultsOSRD -left
-preplace inst ecdcom_mgr -pg 1 -lvl 3 -x 1140 -y 60 -swap {0 1 2 3 4 5 6 7 12 9 10 11 8 13 14 15 17 19 18 16 20 21 22 23 24} -defaultsOSRD -pinDir fd_in0 left -pinY fd_in0 20L -pinDir fd_in1 left -pinY fd_in1 140L -pinDir lvds_out right -pinY lvds_out 130R -pinDir packet_req right -pinY packet_req 30R -pinDir clk left -pinY clk 230L -pinDir resetn left -pinY resetn 250L -pinDir start_stb right -pinY start_stb 150R -pinDir enable left -pinY enable 160L -pinDir lvds_underflow right -pinY lvds_underflow 170R -pinBusDir fd0_packet_count right -pinBusY fd0_packet_count 190R -pinBusDir fd1_packet_count right -pinBusY fd1_packet_count 210R -pinDir fd_fifo_full right -pinY fd_fifo_full 230R -pinDir lvds_clk right -pinY lvds_clk 250R
-preplace inst ecdcom_router_0 -pg 1 -lvl 2 -x 824 -y 40 -swap {0 1 2 3 4 5 6 7 9 8 10} -defaultsOSRD -pinDir axis_fdp right -pinY axis_fdp 40R -pinDir axis_in left -pinY axis_in 20L -pinDir clk left -pinY clk 60L -pinDir resetn left -pinY resetn 40L -pinDir enable right -pinY enable 60R
-preplace inst ecdcom_router_1 -pg 1 -lvl 2 -x 824 -y 180 -swap {0 1 2 3 4 5 6 7 9 8 10} -defaultsOSRD -pinDir axis_fdp right -pinY axis_fdp 20R -pinDir axis_in left -pinY axis_in 20L -pinDir clk left -pinY clk 60L -pinDir resetn left -pinY resetn 40L -pinDir enable right -pinY enable 40R
-preplace inst reset_man -pg 1 -lvl 1 -x 260 -y 260 -swap {1 0 2 3} -defaultsOSRD -pinDir clk left -pinY clk 360L -pinDir reset_stb left -pinY reset_stb 280L -pinDir reset_done left -pinY reset_done 380L -pinBusDir resetn_out right -pinBusY resetn_out 100R
-preplace inst ecdcom_uw_buffer -pg 1 -lvl 3 -x 1140 -y 430 -defaultsOSRD -pinDir axis_in left -pinY axis_in 20L -pinDir axis_out right -pinY axis_out 20R -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L -pinDir fifo_overflow right -pinY fifo_overflow 40R
-preplace inst ecdcom_rdmx_sequencer_0 -pg 1 -lvl 4 -x 1470 -y 70 -defaultsOSRD -pinDir axis_in left -pinY axis_in 20L -pinDir axis_out right -pinY axis_out 20R -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L
-preplace inst ecdcom_rdmx_sequencer_1 -pg 1 -lvl 4 -x 1470 -y 430 -defaultsOSRD -pinDir axis_in left -pinY axis_in 20L -pinDir axis_out right -pinY axis_out 20R -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L
-preplace inst bad_packet_filter0 -pg 1 -lvl 1 -x 260 -y -20 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 17 16 15 14} -defaultsOSRD -pinDir AXIS_IN left -pinY AXIS_IN -10L -pinDir AXIS_OUT right -pinY AXIS_OUT -10R -pinDir clk left -pinY clk 30L -pinDir resetn right -pinY resetn 30R -pinDir bad_packet_strb right -pinY bad_packet_strb 10R -pinBusDir bad_packet_count left -pinBusY bad_packet_count 10L
-preplace inst bad_packet_filter1 -pg 1 -lvl 1 -x 260 -y 120 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 17 15 16 14} -defaultsOSRD -pinDir AXIS_IN left -pinY AXIS_IN -10L -pinDir AXIS_OUT right -pinY AXIS_OUT -10R -pinDir clk left -pinY clk 30L -pinDir resetn right -pinY resetn 10R -pinDir bad_packet_strb right -pinY bad_packet_strb 30R -pinBusDir bad_packet_count left -pinBusY bad_packet_count 10L
-preplace inst ecdcom_link_state -pg 1 -lvl 1 -x 260 -y 750 -defaultsOSRD -pinDir clk left -pinY clk 20L -pinDir rx0_aligned right -pinY rx0_aligned 40R -pinDir rx1_aligned right -pinY rx1_aligned 60R -pinBusDir link_state left -pinBusY link_state 40L
-preplace inst one -pg 1 -lvl 2 -x 824 -y 530 -defaultsOSRD -pinBusDir dout left -pinBusY dout 20L
-preplace netloc Net 1 3 2 NJ 310 NJ
-preplace netloc bad_packet_filter0_bad_packet_count 1 0 1 -20 -10n
-preplace netloc bad_packet_filter1_bad_packet_count 1 0 1 70 130n
-preplace netloc ecdcom_ctl_start_stb 1 3 2 NJ 210 NJ
-preplace netloc ecdcom_link_state_link_state 1 0 1 -40 530n
-preplace netloc ecdcom_mgr_enable 1 2 1 960 100n
-preplace netloc ecdcom_mgr_fd0_packet_count 1 3 2 NJ 250 NJ
-preplace netloc ecdcom_mgr_fd1_packet_count 1 3 2 NJ 270 NJ
-preplace netloc ecdcom_mgr_fd_fifo_full 1 3 2 NJ 290 NJ
-preplace netloc ecdcom_mgr_lvds_underflow 1 3 2 NJ 230 NJ
-preplace netloc ecdcom_reset_ctl_0_reset_done 1 0 1 0J 380n
-preplace netloc ecdcom_uw_buffer_fifo_overflow 1 3 2 1320J 390 NJ
-preplace netloc one_dout 1 1 1 530J 550n
-preplace netloc reset_stb_1 1 0 1 20J 340n
-preplace netloc source_100mhz_sys_clk 1 0 4 50 690 470 470 960 370 1340
-preplace netloc source_100mhz_sys_resetn 1 1 3 490 490 980 390 1300
-preplace netloc axis_in0_1 1 0 1 -40 -30n
-preplace netloc axis_in1_1 1 0 1 -40 110n
-preplace netloc bad_packet_filter0_AXIS_OUT 1 1 1 510 -30n
-preplace netloc bad_packet_filter1_AXIS_OUT 1 1 1 450 110n
-preplace netloc ecdcom_mgr_lvds_out 1 3 2 NJ 190 NJ
-preplace netloc ecdcom_mgr_packet_req 1 3 1 N 90
-preplace netloc ecdcom_rdmx_sequencer_0_axis_out 1 4 1 NJ 90
-preplace netloc ecdcom_rdmx_sequencer_1_axis_out 1 4 1 NJ 450
-preplace netloc ecdcom_router_0_axis_fdp 1 2 1 N 80
-preplace netloc ecdcom_router_1_axis_fdp 1 2 1 N 200
-preplace netloc ecdcom_uw_buffer_axis_out 1 3 1 N 450
-preplace netloc uwdata_in_1 1 0 3 -20J 710 510J 450 N
-levelinfo -pg 1 -60 260 824 1140 1470 1620
-pagesize -pg 1 -db -bbox -sgen -290 -90 2240 870
+preplace port axis_in0 -pg 1 -lvl 0 -x -10 -y 60 -defaultsOSRD
+preplace port axis_in1 -pg 1 -lvl 0 -x -10 -y 210 -defaultsOSRD
+preplace port packet_req -pg 1 -lvl 5 -x 1590 -y 140 -defaultsOSRD
+preplace port lvds_out -pg 1 -lvl 5 -x 1590 -y 240 -defaultsOSRD
+preplace port uwdata_in -pg 1 -lvl 0 -x -10 -y 520 -defaultsOSRD
+preplace port uwdata_out -pg 1 -lvl 5 -x 1590 -y 520 -defaultsOSRD
+preplace port port-id_clk -pg 1 -lvl 0 -x -10 -y 400 -defaultsOSRD
+preplace port port-id_start_stb -pg 1 -lvl 5 -x 1590 -y 20 -defaultsOSRD -right
+preplace port port-id_fd_fifo_full -pg 1 -lvl 5 -x 1590 -y 360 -defaultsOSRD
+preplace port port-id_lvds_clk -pg 1 -lvl 5 -x 1590 -y 380 -defaultsOSRD -right
+preplace port port-id_lvds_underflow -pg 1 -lvl 5 -x 1590 -y 300 -defaultsOSRD
+preplace port port-id_reset_stb -pg 1 -lvl 0 -x -10 -y 380 -defaultsOSRD
+preplace port port-id_reset_done -pg 1 -lvl 0 -x -10 -y 420 -defaultsOSRD -left
+preplace port port-id_uw_overflow -pg 1 -lvl 5 -x 1590 -y 460 -defaultsOSRD
+preplace portBus fd0_packet_count -pg 1 -lvl 5 -x 1590 -y 320 -defaultsOSRD
+preplace portBus fd1_packet_count -pg 1 -lvl 5 -x 1590 -y 340 -defaultsOSRD
+preplace portBus qsfp1_bad_packets -pg 1 -lvl 0 -x -10 -y 240 -defaultsOSRD -left
+preplace portBus qsfp0_bad_packets -pg 1 -lvl 0 -x -10 -y 90 -defaultsOSRD -left
+preplace portBus eth_link_state -pg 1 -lvl 0 -x -10 -y 600 -defaultsOSRD -left
+preplace inst ecdcom_mgr -pg 1 -lvl 3 -x 1030 -y 60 -swap {0 1 2 3 4 5 6 7 12 9 10 11 8 13 14 15 16 18 19 17 22 20 21 23 24 25 26} -defaultsOSRD -pinDir fd_in0 left -pinY fd_in0 0L -pinDir fd_in1 left -pinY fd_in1 140L -pinDir lvds_out right -pinY lvds_out 160R -pinDir packet_req right -pinY packet_req 60R -pinDir clk left -pinY clk 280L -pinDir resetn left -pinY resetn 300L -pinDir enable left -pinY enable 160L -pinDir lvds_underflow right -pinY lvds_underflow 220R -pinBusDir pairs_demanded right -pinBusY pairs_demanded 180R -pinDir pr_fifo_overrun right -pinY pr_fifo_overrun 200R -pinBusDir fd0_packet_count right -pinBusY fd0_packet_count 240R -pinBusDir fd1_packet_count right -pinBusY fd1_packet_count 260R -pinDir fd_fifo_full right -pinY fd_fifo_full 280R -pinDir lvds_clk right -pinY lvds_clk 300R
+preplace inst ecdcom_router_0 -pg 1 -lvl 2 -x 660 -y 60 -swap {4 1 2 3 0 5 6 7 8 9 10 11 13 12 14} -defaultsOSRD -pinDir axis_axi right -pinY axis_axi 40R -pinDir axis_fdp right -pinY axis_fdp 20R -pinDir axis_in left -pinY axis_in 20L -pinDir clk left -pinY clk 60L -pinDir resetn left -pinY resetn 40L -pinDir enable right -pinY enable 60R
+preplace inst ecdcom_router_1 -pg 1 -lvl 2 -x 660 -y 200 -swap {4 1 2 3 0 5 6 7 8 9 10 11 13 12 14} -defaultsOSRD -pinDir axis_axi right -pinY axis_axi 40R -pinDir axis_fdp right -pinY axis_fdp 20R -pinDir axis_in left -pinY axis_in 20L -pinDir clk left -pinY clk 60L -pinDir resetn left -pinY resetn 40L -pinDir enable right -pinY enable 60R
+preplace inst ecdcom_uw_buffer -pg 1 -lvl 3 -x 1030 -y 500 -swap {0 1 2 3 4 5 6 7 8 9 10 12 11 13 14} -defaultsOSRD -pinDir axis_in left -pinY axis_in 20L -pinDir axis_out right -pinY axis_out 20R -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L -pinDir soft_resetn left -pinY soft_resetn 100L -pinDir enable left -pinY enable 80L -pinDir halted right -pinY halted 40R -pinDir fifo_overflow right -pinY fifo_overflow 60R
+preplace inst ecdcom_rdmx_sequencer_0 -pg 1 -lvl 4 -x 1440 -y 120 -defaultsOSRD -pinDir axis_in left -pinY axis_in 20L -pinDir axis_out right -pinY axis_out 20R -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L
+preplace inst ecdcom_rdmx_sequencer_1 -pg 1 -lvl 4 -x 1440 -y 500 -defaultsOSRD -pinDir axis_in left -pinY axis_in 20L -pinDir axis_out right -pinY axis_out 20R -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L
+preplace inst bad_packet_filter0 -pg 1 -lvl 1 -x 270 -y 40 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 17 16 15 14} -defaultsOSRD -pinDir AXIS_IN left -pinY AXIS_IN 0L -pinDir AXIS_OUT right -pinY AXIS_OUT 20R -pinDir clk left -pinY clk 60L -pinDir resetn right -pinY resetn 60R -pinDir bad_packet_strb right -pinY bad_packet_strb 40R -pinBusDir bad_packet_count left -pinBusY bad_packet_count 40L
+preplace inst bad_packet_filter1 -pg 1 -lvl 1 -x 270 -y 180 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 17 15 16 14} -defaultsOSRD -pinDir AXIS_IN left -pinY AXIS_IN 20L -pinDir AXIS_OUT right -pinY AXIS_OUT 20R -pinDir clk left -pinY clk 60L -pinDir resetn right -pinY resetn 40R -pinDir bad_packet_strb right -pinY bad_packet_strb 60R -pinBusDir bad_packet_count left -pinBusY bad_packet_count 40L
+preplace inst ecdcom_link_state -pg 1 -lvl 1 -x 270 -y 560 -defaultsOSRD -pinDir clk left -pinY clk 20L -pinDir rx0_aligned right -pinY rx0_aligned 40R -pinDir rx1_aligned right -pinY rx1_aligned 60R -pinBusDir link_state left -pinBusY link_state 40L
+preplace inst one -pg 1 -lvl 2 -x 660 -y 600 -defaultsOSRD -pinBusDir dout left -pinBusY dout 20L
+preplace inst ecdcom_reset_ctl -pg 1 -lvl 1 -x 270 -y 340 -swap {6 0 2 1 5 4 3 7} -defaultsOSRD -pinDir clk left -pinY clk 100L -pinDir uw_buffer_halted left -pinY uw_buffer_halted 20L -pinDir start_stb left -pinY start_stb 60L -pinDir reset_stb left -pinY reset_stb 40L -pinDir soft_resetn_out right -pinY soft_resetn_out 40R -pinDir resetn_out right -pinY resetn_out 20R -pinDir reset_done left -pinY reset_done 80L -pinDir enable right -pinY enable 60R
+preplace netloc Net 1 3 2 1190J 380 NJ
+preplace netloc bad_packet_filter0_bad_packet_count 1 0 1 10 80n
+preplace netloc bad_packet_filter1_bad_packet_count 1 0 1 30 220n
+preplace netloc ecdcom_ctl_start_stb 1 0 5 70 -20 490 20 790 0 1310 20 NJ
+preplace netloc ecdcom_link_state_link_state 1 0 1 N 600
+preplace netloc ecdcom_mgr_fd0_packet_count 1 3 2 1250J 320 NJ
+preplace netloc ecdcom_mgr_fd1_packet_count 1 3 2 1230J 340 NJ
+preplace netloc ecdcom_mgr_fd_fifo_full 1 3 2 1210J 360 NJ
+preplace netloc ecdcom_mgr_lvds_underflow 1 3 2 1310J 300 NJ
+preplace netloc ecdcom_reset_ctl_0_reset_done 1 0 1 NJ 420
+preplace netloc ecdcom_reset_ctl_enable 1 1 2 450J 420 810
+preplace netloc ecdcom_reset_ctl_soft_resetn_out 1 1 2 470J 400 790
+preplace netloc ecdcom_uw_buffer_fifo_overflow 1 3 2 1310J 460 NJ
+preplace netloc ecdcom_uw_buffer_halted 1 0 4 90 300 450J 320 830J 420 1190
+preplace netloc one_dout 1 1 1 450J 600n
+preplace netloc reset_stb_1 1 0 1 NJ 380
+preplace netloc source_100mhz_sys_clk 1 0 4 50 500 530 540 850 440 1270
+preplace netloc source_100mhz_sys_resetn 1 1 3 490 560 870 460 1290
+preplace netloc axis_in0_1 1 0 1 10 40n
+preplace netloc axis_in1_1 1 0 1 10 200n
+preplace netloc bad_packet_filter0_AXIS_OUT 1 1 1 490 60n
+preplace netloc bad_packet_filter1_AXIS_OUT 1 1 1 510 200n
+preplace netloc ecdcom_mgr_lvds_out 1 3 2 1310J 240 NJ
+preplace netloc ecdcom_mgr_packet_req 1 3 1 1310 120n
+preplace netloc ecdcom_rdmx_sequencer_0_axis_out 1 4 1 NJ 140
+preplace netloc ecdcom_rdmx_sequencer_1_axis_out 1 4 1 NJ 520
+preplace netloc ecdcom_router_0_axis_fdp 1 2 1 790 60n
+preplace netloc ecdcom_router_1_axis_fdp 1 2 1 790 200n
+preplace netloc ecdcom_uw_buffer_axis_out 1 3 1 N 520
+preplace netloc uwdata_in_1 1 0 3 NJ 520 NJ 520 N
+levelinfo -pg 1 -10 270 660 1030 1440 1590
+pagesize -pg 1 -db -bbox -sgen -230 -30 1800 680
 ",
-   "No Loops_ScaleFactor":"0.772753",
-   "No Loops_TopLeft":"-232,-102",
+   "No Loops_ScaleFactor":"0.710315",
+   "No Loops_TopLeft":"-231,-89",
    "guistr":"# # String gsaved with Nlview 7.8.0 2024-04-26 e1825d835c VDI=44 GEI=38 GUI=JA:21.0 TLS
 #  -string -flagsOSRD
 preplace port axis_in0 -pg 1 -lvl 0 -x 0 -y 60 -defaultsOSRD

@@ -45,6 +45,7 @@
         "start_stb": [ { "direction": "out" } ],
         "reset_stb": [ { "direction": "out" } ],
         "reset_done": [ { "direction": "in" } ],
+        "soft_resetn_out": [ { "direction": "out" } ],
         "fd0_rcvd": [ { "direction": "in", "size_left": "63", "size_right": "0" } ],
         "fd1_rcvd": [ { "direction": "in", "size_left": "63", "size_right": "0" } ],
         "uw_overflow": [ { "direction": "in" } ],

@@ -1,11 +1,11 @@
-//====================================================================================
-//                        ------->  Revision History  <------
-//====================================================================================
+//=============================================================================
+//                  ------->  Revision History  <------
+//=============================================================================
 //
 //   Date     Who   Ver  Changes
-//====================================================================================
+//=============================================================================
 // 04-Jul-26  DWW     1  Initial creation
-//====================================================================================
+//=============================================================================
 
 /*
     Provides control and status registers for an ECD simulator
@@ -24,6 +24,9 @@ module ecdcom_ctl # (parameter AW=8)
     // Reset ouput control and status
     output reg reset_stb,
     input      reset_done,
+
+    // This is a software controlled reset
+    output reg soft_resetn_out,
 
     // The number of frame-data packets received on each channel
     input[63:0]  fd0_rcvd, fd1_rcvd,
@@ -48,7 +51,7 @@ module ecdcom_ctl # (parameter AW=8)
     output reg[31:0]  uw_ipg,
     output reg[ 1:0]  uw_start_stb,
 
-    //================== This is an AXI4-Lite slave interface ==================
+    //================== This is an AXI4-Lite slave interface =================
         
     // "Specify write address"              -- Master --    -- Slave --
     input[AW-1:0]                           S_AXI_AWADDR,   
@@ -79,10 +82,10 @@ module ecdcom_ctl # (parameter AW=8)
     output                                                  S_AXI_RVALID,
     output[ 1:0]                                            S_AXI_RRESP,
     input                                   S_AXI_RREADY
-    //==========================================================================
+    //=========================================================================
 );  
 
-//=========================  AXI Register Map  =============================
+//=========================  AXI Register Map  ================================
 localparam REG_START          = 0;
 localparam REG_READY          = 1;
 localparam REG_RESET          = 2;
@@ -99,12 +102,12 @@ localparam REG_FD0_RCVD_H     = 16;
 localparam REG_FD0_RCVD_L     = 17;
 localparam REG_FD1_RCVD_H     = 18;
 localparam REG_FD1_RCVD_L     = 19;
-//==========================================================================
+//=============================================================================
 
 
-//==========================================================================
+//=============================================================================
 // We'll communicate with the AXI4-Lite Slave core with these signals.
-//==========================================================================
+//=============================================================================
 // AXI Slave Handler Interface for write requests
 wire[  31:0]  ashi_windx;     // Input   Write register-index
 wire[AW-1:0]  ashi_waddr;     // Input:  Write-address
@@ -120,12 +123,12 @@ wire          ashi_read;      // Input:  1 = Handle a read request
 reg [  31:0]  ashi_rdata;     // Output: Read data
 reg [   1:0]  ashi_rresp;     // Output: Read-response (OKAY, DECERR, SLVERR);
 wire          ashi_ridle;     // Output: 1 = Read state machine is idle
-//==========================================================================
+//=============================================================================
 
 // The state of the state-machines that handle AXI4-Lite read and AXI4-Lite write
 reg ashi_write_state, ashi_read_state;
 
-// The AXI4 slave state machines are idle when in state 0 and their "start" signals are low
+// The AXI4 slave state machines are idle when state 0 and "start" signals are low
 assign ashi_widle = (ashi_write == 0) && (ashi_write_state == 0);
 assign ashi_ridle = (ashi_read  == 0) && (ashi_read_state  == 0);
    
@@ -134,15 +137,85 @@ localparam OKAY   = 0;
 localparam SLVERR = 2;
 localparam DECERR = 3;
 
+//=============================================================================
+// Here we're sensing the rising edge of "reset_done"
+//=============================================================================
+reg prior_reset_done;
+always @(posedge clk) prior_reset_done <= reset_done;
+wire reset_done_rising_edge = (prior_reset_done == 0) & (reset_done == 1);
+//=============================================================================
 
-//==========================================================================
-// This state machine handles AXI4-Lite write requests
-//==========================================================================
+//=============================================================================
+// Keep track of whether ecdcom is currently in reset or is about to be in
+// reset
+//=============================================================================
+reg ecdcom_in_reset;
+//-----------------------------------------------------------------------------
+always @(posedge clk) begin
+    if (resetn == 0)
+        ecdcom_in_reset <= 1;
+    else if (reset_trigger)
+        ecdcom_in_reset <= 1;
+    else if (reset_done_rising_edge)
+        ecdcom_in_reset <= 0;
+end
+//=============================================================================
+
+
+//=============================================================================
+// When "reset_trigger" is strobed, a counter begins counting down.  When
+// that counter reaches "1" (which it will be at for exactly one clock cycle),
+// "reset_stb" is strobed high.
+//
+// We do this to allow some clock cycles between the time that a register
+// write says "reset the system please" and the time that we actually issue
+// the reset (by strobing reset_stb).  This delay gives ecdcom an opportunity
+// to transmit its AXI write-response message before we reset everything
+//=============================================================================
+reg      reset_trigger;
+reg[9:0] reset_delay_ctr;
+//-----------------------------------------------------------------------------
 always @(posedge clk) begin
 
-    start_stb    <= 0;
-    reset_stb    <= 0;
-    uw_start_stb <= 0;
+    // Assert reset_stb while we're in reset!
+    if (resetn == 0)
+        reset_stb <= 1;
+    else
+        reset_stb <= (reset_delay_ctr == 1);
+
+    if (resetn == 0)
+        reset_delay_ctr <= 0;
+    else if (reset_trigger)
+        reset_delay_ctr <= -1;
+    else if (reset_delay_ctr)
+        reset_delay_ctr <= reset_delay_ctr - 1;
+
+end
+//=============================================================================
+
+
+//=============================================================================
+// Keep track of whether or not ecdcom has been started
+//=============================================================================
+reg started;
+//-----------------------------------------------------------------------------
+always @(posedge clk) begin
+    if (resetn == 0 || reset_trigger)
+        started <= 0;
+    else if (start_stb)
+        started <= 1;
+end
+//=============================================================================
+
+
+//=============================================================================
+// This state machine handles AXI4-Lite write requests
+//=============================================================================
+always @(posedge clk) begin
+
+    start_stb     <= 0;
+    reset_trigger <= 0;
+    uw_start_stb  <= 0;
 
     // If we're in reset, initialize important registers
     if (resetn == 0) begin
@@ -163,11 +236,11 @@ always @(posedge clk) begin
                 // ashi_windex = index of register to be written
                 case (ashi_windx)
                
-                    REG_START:      start_stb    <= (ashi_wdata != 0);
-                    REG_RESET:      reset_stb    <= (ashi_wdata != 0);
-                    REG_UW_LIMIT:   uw_limit     <= (ashi_wdata == 0) ? 1 : ashi_wdata;
-                    REG_UW_IPG:     uw_ipg       <= ashi_wdata;
-                    REG_UW_START:   uw_start_stb <= ashi_wdata;
+                    REG_START:      start_stb     <= (ashi_wdata != 0);
+                    REG_RESET:      reset_trigger <= (ashi_wdata != 0);
+                    REG_UW_LIMIT:   uw_limit      <= (ashi_wdata == 0) ? 1 : ashi_wdata;
+                    REG_UW_IPG:     uw_ipg        <= ashi_wdata;
+                    REG_UW_START:   uw_start_stb  <= ashi_wdata;
 
 
                     // Writes to any other register are a decode-error
@@ -180,13 +253,13 @@ always @(posedge clk) begin
 
     endcase
 end
-//==========================================================================
+//=============================================================================
 
 
 
-//==========================================================================
+//=============================================================================
 // World's simplest state machine for handling AXI4-Lite read requests
-//==========================================================================
+//=============================================================================
 always @(posedge clk) begin
 
     // If we're in reset, initialize important registers
@@ -195,7 +268,7 @@ always @(posedge clk) begin
     
     // If we're not in reset, and a read-request has occured...        
     end else if (ashi_read) begin
-   
+     
         // Assume for the moment that the result will be OKAY
         ashi_rresp <= OKAY;              
         
@@ -203,9 +276,9 @@ always @(posedge clk) begin
         case (ashi_rindx)
             
             // Allow a read from any valid register                
-            REG_START:           ashi_rdata <= 42;
+            REG_START:           ashi_rdata <= started;
             REG_READY:           ashi_rdata <= fd_fifo_full;
-            REG_RESET:           ashi_rdata <= (reset_done) ? 0 : 1;
+            REG_RESET:           ashi_rdata <= ecdcom_in_reset;
             REG_LVDS_UNDERFLOW:  ashi_rdata <= lvds_underflow;
             REG_UW_LIMIT:        ashi_rdata <= uw_limit;
             REG_UW_IPG:          ashi_rdata <= uw_ipg;
@@ -224,13 +297,32 @@ always @(posedge clk) begin
         endcase
     end
 end
-//==========================================================================
+//=============================================================================
+
+//=============================================================================
+// Here we generate a software controllable reset output that asserts for
+// a few cycles any time "reset_stb" goes high
+//=============================================================================
+reg[5:0] soft_resetn_ctr;
+//-----------------------------------------------------------------------------
+always @(posedge clk) begin
+    if (resetn == 0)
+        soft_resetn_ctr <= -1;
+    else if (reset_stb)
+        soft_resetn_ctr <= -1;
+    else if (soft_resetn_ctr)
+        soft_resetn_ctr <= soft_resetn_ctr - 1;
+
+    // The external resetn is active while we're counting down
+    soft_resetn_out <= (soft_resetn_ctr == 0);
+end
+//=============================================================================
 
 
 
-//==========================================================================
+//=============================================================================
 // This connects us to an AXI4-Lite slave core
-//==========================================================================
+//=============================================================================
 axi4_lite_slave#(.AW(AW)) i_axi4lite_slave
 (
     .clk            (clk),
@@ -281,7 +373,7 @@ axi4_lite_slave#(.AW(AW)) i_axi4lite_slave
     .ASHI_RRESP     (ashi_rresp),
     .ASHI_RIDLE     (ashi_ridle)
 );
-//==========================================================================
+//=============================================================================
 
 
 

@@ -19,14 +19,17 @@ module ecdcom_mgr
     input clk,
     input resetn,
 
-    // Strobing this high causes the frame-data FIFOs to fill
-    input start_stb,
-
-    // This enables the input routers
-    output reg enable,
+    // The rising edge causes the frame-data FIFOs to fill
+    input enable,
 
     // If this is asserted, an underflow occured on the LVDS output 
     output lvds_underflow,
+
+    // The total number of packet pairs demanded since reset
+    output reg [31:0] pairs_demanded,
+
+    // This will latch high if the packet-request FIFO overruns
+    output reg        pr_fifo_overrun,
 
     // Input stream from QSFP_0
     input[511:0]        fd_in0_tdata,
@@ -47,7 +50,8 @@ module ecdcom_mgr
     // We use this output stream to issue packet requests
     output[511:0]       packet_req_tdata,
     output              packet_req_tlast,
-    output reg          packet_req_tvalid,
+    output              packet_req_tvalid,
+    input               packet_req_tready,
 
     (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 lvds_clk CLK" *)
     (* X_INTERFACE_PARAMETER = "ASSOCIATED_BUSIF lvds_out" *)
@@ -100,6 +104,11 @@ wire [FIFO_WIDTH-1:0] fifo_out_tdata [0:1];
 wire                  fifo_out_tvalid[0:1];
 reg                   fifo_out_tready[0:1];
 
+// These feed the packet-request FIFO
+wire[FIFO_WIDTH-1:0]  pr_fifo_in_tdata;
+reg                   pr_fifo_in_tvalid;
+wire                  pr_fifo_in_tready;
+
 // One "start of packet" marker for each input stream
 reg sop[0:1];
 
@@ -113,6 +122,18 @@ reg[31:0] fd_fifo_occy[0:1];
 
 // This strobes high in order to initiate a frame-data request
 reg request_group_stb;
+
+// Packet requests are always 1 cycle long
+assign packet_req_tlast = 1;
+
+//=============================================================================
+// Detect the rising edge of "enable"
+//=============================================================================
+reg previous_enable;
+always @(posedge clk) previous_enable <= enable;
+wire start_stb = (previous_enable == 0) & (enable == 1);
+//=============================================================================
+
 
 //=============================================================================
 // Count the number of frame-data packets we receive on each channel
@@ -244,24 +265,44 @@ assign fd_fifo_full = (fd_fifo_occy[0] > (FD_FIFO_DEPTH - FD_PACKET_CYCLES))
 // This state machine sends packet requests
 //=============================================================================
 reg[31:0] packets_requested;
+localparam INITIAL_DEMAND = FD_FIFO_DEPTH / FD_PACKET_CYCLES;
+localparam RUNTIME_DEMAND = FRAME_DATA_REQ_SIZE / (FD_PAYLOAD_SIZE * 2);
 //-----------------------------------------------------------------------------
 always @(posedge clk) begin
-    packet_req_tvalid <= 0;
+
+    pr_fifo_in_tvalid <= 0;
+
+    if (resetn == 0) begin
+        pairs_demanded <= 0;
+    end
 
     // Do we need to request enough packets to fill both FIFOs?
-    if (start_stb && fd_fifo_occy[0] == 0 && fd_fifo_occy[1] == 0) begin
-        packets_requested <= FD_FIFO_DEPTH / FD_PACKET_CYCLES;
-        packet_req_tvalid <= 1;
+    else if (start_stb && fd_fifo_occy[0] == 0 && fd_fifo_occy[1] == 0) begin
+        packets_requested <= INITIAL_DEMAND;
+        pairs_demanded    <= pairs_demanded + INITIAL_DEMAND;
+        pr_fifo_in_tvalid <= 1;
     end
 
     // Do we need to request just a few packets?
-    if (request_group_stb) begin
-        packets_requested <= FRAME_DATA_REQ_SIZE / (FD_PAYLOAD_SIZE * 2);
-        packet_req_tvalid <= 1;
+    if (enable & request_group_stb) begin
+        packets_requested <= RUNTIME_DEMAND;
+        pairs_demanded    <= pairs_demanded + RUNTIME_DEMAND;
+        pr_fifo_in_tvalid <= 1;
     end
 
 end
-assign packet_req_tlast = 1;
+//=============================================================================
+
+
+//=============================================================================
+// Here we monitor for overruns in the packet-request FIFO 
+//=============================================================================
+always @(posedge clk) begin
+    if (resetn == 0)
+        pr_fifo_overrun <= 0;
+    else if (pr_fifo_in_tvalid & !pr_fifo_in_tready)
+        pr_fifo_overrun <= 1;
+end
 //=============================================================================
 
 
@@ -276,21 +317,10 @@ ecdcom_rdmx_encoder # (.SRC_MAC(0)) u_rdmx_encoder
     .rdmx_user_field    (PT_COMMAND),
     .rdmx_reserved      (0),
     .payload_length     (0),
-    .le_rdmx_header     (packet_req_tdata)
+    .le_rdmx_header     (pr_fifo_in_tdata)
 );
 //=============================================================================
 
-
-//=============================================================================
-// The fd_in streams aren't enabled until a start_stb happens
-//=============================================================================
-always @(posedge clk) begin
-    if (resetn == 0)
-        enable <= 0;
-    else if (start_stb)
-        enable <= 1;
-end
-//=============================================================================
 
 //=============================================================================
 // This is the frame-data FIFO for QSFP_0
@@ -320,7 +350,7 @@ i_fd_fifo_0
     .m_axis_tdata (fifo_out_tdata [0]),
     .m_axis_tvalid(fifo_out_tvalid[0]),
     .m_axis_tready(fifo_out_tready[0]),
-
+  
     // Unused input stream signals
     .s_axis_tuser(),
     .s_axis_tkeep(),
@@ -328,7 +358,7 @@ i_fd_fifo_0
     .s_axis_tdest(),
     .s_axis_tid  (),
     .s_axis_tstrb(),
-
+   
     // Unused output stream signals
     .m_axis_tuser(),
     .m_axis_tdest(),
@@ -410,6 +440,68 @@ i_fd_fifo_1
     .injectsbiterr_axis()
 );
 //=============================================================================
+
+
+//=============================================================================
+// This FIFO holds packet requests
+//=============================================================================
+xpm_fifo_axis #
+(
+   .TDATA_WIDTH     (FIFO_WIDTH),
+   .FIFO_DEPTH      (16),
+   .FIFO_MEMORY_TYPE("auto"),
+   .PACKET_FIFO     ("false"),
+   .USE_ADV_FEATURES("0000"),
+   .CLOCKING_MODE   ("common_clock")
+)
+i_pr_fifo
+(
+    // Clock and reset
+    .s_aclk   (clk   ),
+    .m_aclk   (clk   ),
+    .s_aresetn(resetn),
+
+    // The input bus of the FIFO
+    .s_axis_tdata (pr_fifo_in_tdata ),
+    .s_axis_tvalid(pr_fifo_in_tvalid),
+    .s_axis_tready(pr_fifo_in_tready),
+
+    // The output bus of the FIFO
+    .m_axis_tdata (packet_req_tdata ),
+    .m_axis_tvalid(packet_req_tvalid),
+    .m_axis_tready(packet_req_tready),
+
+    // Unused input stream signals
+    .s_axis_tuser(),
+    .s_axis_tkeep(),
+    .s_axis_tlast(),
+    .s_axis_tdest(),
+    .s_axis_tid  (),
+    .s_axis_tstrb(),
+
+    // Unused output stream signals
+    .m_axis_tuser(),
+    .m_axis_tdest(),
+    .m_axis_tid  (),
+    .m_axis_tstrb(),
+    .m_axis_tkeep(),
+    .m_axis_tlast(),
+
+    // Other unused signals
+    .almost_empty_axis (),
+    .almost_full_axis  (),
+    .dbiterr_axis      (),
+    .prog_empty_axis   (),
+    .prog_full_axis    (),
+    .rd_data_count_axis(),
+    .sbiterr_axis      (),
+    .wr_data_count_axis(),
+    .injectdbiterr_axis(),
+    .injectsbiterr_axis()
+);
+//=============================================================================
+
+
 
 
 

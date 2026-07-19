@@ -20,6 +20,13 @@ module ecdcom_uw_buffer
     (* X_INTERFACE_PARAMETER = "ASSOCIATED_BUSIF axis_in:axis_out, ASSOCIATED_RESET resetn" *)
     input   clk,
     input   resetn,
+    input   soft_resetn,
+
+    // We will emit packets to the CMAC only if we are enabled,
+    input   enable,
+    
+    // This is asserted when enable is low and all output traffic has halted
+    output reg halted,
 
     // Input stream of userwave-data 
     input[511:0]        axis_in_tdata,
@@ -57,6 +64,14 @@ wire[511:0] le_rdmx_header;
 // How many entries in the FIFO are free?
 reg[31:0] fifo_free;
 
+//=============================================================================
+// Detect the rising edge of "enable"
+//=============================================================================
+reg previous_enable;
+always @(posedge clk) previous_enable <= enable;
+wire enable_rising_edge = (previous_enable == 0) & (enable == 1);
+//=============================================================================
+
 
 //=============================================================================
 // This block ensure that "sop" is asserted on the first cycle of every packet.
@@ -64,13 +79,27 @@ reg[31:0] fifo_free;
 reg waiting_for_sop;
 //-----------------------------------------------------------------------------
 always @(posedge clk) begin
-    if (resetn == 0) begin
+    if (soft_resetn == 0) 
         waiting_for_sop <= 1;
-    end else if (axis_in_tvalid)
+    else if (axis_in_tvalid)
         waiting_for_sop <= axis_in_tlast;
 end
 
 wire sop = (axis_in_tvalid & waiting_for_sop);
+//=============================================================================
+
+
+//=============================================================================
+// This ensures that we don't asserted "halted" in the middle of a packet
+//=============================================================================
+always @(posedge clk) begin
+    if (soft_resetn == 0)
+        halted <= 1;
+    else if (enable_rising_edge)
+        halted <= 0;
+    else if (waiting_for_sop && enable == 0)
+        halted <= 1;
+end
 //=============================================================================
 
 
@@ -89,20 +118,26 @@ always @(posedge clk) begin
     // The input to the FIFO comes from our input stream
     fifo_in_tdata <= axis_in_tdata;
 
-    if (resetn == 0) begin
-        drop_packet     <= 1;
-        fifo_overflow   <= 0;
+    if (soft_resetn == 0) begin
+        drop_packet   <= 1;
+        fifo_overflow <= 0;
     end
 
     // If this is the first data-cycle of the packet, determine whether
-    // or not want to keep the packet
+    // or not we want to keep the packet
     else if (sop) begin
-        if (fifo_has_room) begin
+        if (enable == 0) begin
+            drop_packet    <= 1;
+        end 
+
+        else if (fifo_has_room) begin
             fifo_in_tvalid <= 1;
             drop_packet    <= 0;
-        end else begin
-            drop_packet    <= 1;
-            fifo_overflow  <= 1;
+        end
+        
+        else begin
+            drop_packet   <= 1;
+            fifo_overflow <= 1;
         end
     end
     
@@ -119,7 +154,7 @@ end
 // Keep track of how many entries in the FIFO are free
 //=============================================================================
 always @(posedge clk) begin
-    if (resetn == 0) 
+    if (soft_resetn == 0) 
         fifo_free <= UW_FIFO_DEPTH;
     else
         fifo_free <= fifo_free - (fifo_in_tvalid)
@@ -133,7 +168,7 @@ end
 reg[7:0] output_cycle;
 //-----------------------------------------------------------------------------
 always @(posedge clk) begin
-    if (resetn == 0) begin
+    if (soft_resetn == 0) begin
         output_cycle <= 0;
     end 
 
@@ -199,7 +234,7 @@ ecdcom_rdmx_encoder # (.SRC_MAC(1)) u_rdmx_encoder
 
 
 //=============================================================================
-// This is the frame-data FIFO for QSFP_0
+// This is the userwave-data FIFO 
 //=============================================================================
 xpm_fifo_axis #
 (

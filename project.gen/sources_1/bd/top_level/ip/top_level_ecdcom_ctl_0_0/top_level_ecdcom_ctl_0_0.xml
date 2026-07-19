@@ -709,6 +709,18 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
+        <spirit:name>soft_resetn_out</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>reg</spirit:typeName>
+              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
         <spirit:name>fd0_rcvd</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>

@@ -29,7 +29,12 @@ module ecdcom_router
     // This is a stream of frame-data packets
     output[511:0]   axis_fdp_tdata,
     output          axis_fdp_tlast,
-    output          axis_fdp_tvalid
+    output          axis_fdp_tvalid,
+
+    // This is a stream of AXI transaction requests
+    output[511:0]   axis_axi_tdata,
+    output          axis_axi_tlast,
+    output          axis_axi_tvalid
 
 );
 
@@ -45,20 +50,28 @@ wire[15:0] payload_bytes;
 
 // These are bit-numbers in "route" and "tvalid"
 localparam FDP_BIT = 0;
-reg[0:0] route, tvalid;
+localparam AXI_BIT = 1;
+reg[1:0] route, tvalid;
 
 // One bit per output bus
 localparam ROUTE_DROP = 0;
 localparam ROUTE_FDP  = (1 << FDP_BIT);
+localparam ROUTE_AXI  = (1 << AXI_BIT);
 
 // Incoming data will be written into these registers
 reg[511:0] tdata;
 reg        tlast;
 
-// Drive the command output stream
+// Drive the frame-data packet output stream
 assign axis_fdp_tvalid = tvalid[FDP_BIT];
 assign axis_fdp_tdata  = tdata;
 assign axis_fdp_tlast  = tlast;
+
+// Drive the AXI-request output stream
+assign axis_axi_tvalid = tvalid[AXI_BIT];
+assign axis_axi_tdata  = tdata;
+assign axis_axi_tlast  = tlast;
+
 
 
 //=============================================================================
@@ -104,14 +117,18 @@ always @(posedge clk) begin
     // want to keep the packet
     else if (sop) begin
 
-        // If we're not enabled or this is not an RDMX packet...
-        if (!(enable & is_rdmx))
-            route <= ROUTE_DROP;
+        // If this isn't an RDMX packet, drop it
+        if (!is_rdmx) route <= ROUTE_DROP;
  
         // If this is a frame-data packet...
-        else if (pkt_type == PT_FRAME_DATA) begin
+        else if (enable && pkt_type == PT_FRAME_DATA) begin
             tvalid <= ROUTE_FDP;
             route  <= ROUTE_FDP;
+        end
+        
+        else if (pkt_type == PT_AXI_REQ) begin
+            tvalid <= ROUTE_AXI;
+            route  <= ROUTE_AXI;
         end
 
         // Any other kind of packet gets dropped
